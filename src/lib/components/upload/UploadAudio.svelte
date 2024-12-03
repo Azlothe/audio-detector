@@ -1,51 +1,67 @@
-<div class="box flex h-full w-full flex-col items-center justify-center space-y-12">
-	<span class="flex items-center space-x-5 text-gray-500">
-		<span class="flex h-12 w-12 items-center justify-center">
-			<svg viewBox="0 0 500 500" class="h-full w-full">
-				<circle
-					cx="249.9"
-					cy="250.4"
-					r="204.7"
-					stroke="#808080"
-					stroke-width="22"
-					stroke-miterlimit="10"
-					fill="none"
-				/>
-				<g>
-					<line
-						fill="none"
-						stroke="#808080"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-miterlimit="10"
-						stroke-width="22"
-						x1="250"
-						x2="250"
-						y1="123"
-						y2="372"
-					/>
-					<line
-						fill="none"
-						stroke="#808080"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-miterlimit="10"
-						stroke-width="22"
-						x1="374"
-						x2="126"
-						y1="247"
-						y2="247"
-					/>
-				</g>
-			</svg>
-		</span>
-		<h1>Upload Audio</h1>
-	</span>
+<script lang="ts">
+	export let onFileSelect: (file: File | null) => void;
 
-	<span class="flex items-center space-x-5 text-gray-500">
-		<h2>Accepted file formats: <code>.mp3</code> <code>.m4a</code></h2>
-	</span>
-</div>
+	let file;
+
+	const handleFileUpload = (event) => {
+		file = event.target?.files[0] || null;
+		if (file && onFileSelect) {
+			onFileSelect(file);
+		}
+	};
+</script>
+
+<input type="file" id="audio-upload" class="hidden" accept="audio/*" on:change={handleFileUpload} />
+<label for="audio-upload" class="h-full w-full cursor-pointer">
+	<div class="box flex h-full w-full flex-col items-center justify-center space-y-12">
+		<span class="flex items-center space-x-5 text-gray-500">
+			<span class="flex h-12 w-12 items-center justify-center">
+				<svg viewBox="0 0 500 500" class="h-full w-full">
+					<circle
+						cx="249.9"
+						cy="250.4"
+						r="204.7"
+						stroke="#808080"
+						stroke-width="22"
+						stroke-miterlimit="10"
+						fill="none"
+					/>
+					<g>
+						<line
+							fill="none"
+							stroke="#808080"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-miterlimit="10"
+							stroke-width="22"
+							x1="250"
+							x2="250"
+							y1="123"
+							y2="372"
+						/>
+						<line
+							fill="none"
+							stroke="#808080"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-miterlimit="10"
+							stroke-width="22"
+							x1="374"
+							x2="126"
+							y1="247"
+							y2="247"
+						/>
+					</g>
+				</svg>
+			</span>
+			<h1>Upload Audio</h1>
+		</span>
+
+		<span class="flex items-center space-x-5 text-gray-500">
+			<h2>Accepted file formats: <code>.mp3</code> <code>.m4a</code></h2>
+		</span>
+	</div>
+</label>
 
 <style>
 	.box {
