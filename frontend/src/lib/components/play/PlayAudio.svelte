@@ -37,7 +37,7 @@
 	<AudioFrequency audio={currentlyPlaying} let:getValues {analysisType}>
 		<div class="h-full w-full overflow-hidden rounded-xl border border-white/15 p-2">
 			<Glow glow={10}>
-				<InnerGlowVisualizer values={getValues(256)} startHue={0} endHue={50} />
+				<InnerGlowVisualizer values={getValues(256)} startHue={0} endHue={120} />
 			</Glow>
 		</div>
 	</AudioFrequency>
@@ -47,8 +47,8 @@
 	>
 		<CircleBarAudioVisualizer
 			audio={currentlyPlaying}
-			startHue={0}
-			endHue={50}
+			startHue={120}
+			endHue={120}
 			rotate={2}
 			{analysisType}
 		/>
@@ -60,8 +60,8 @@
 		<BarAudioVisualizer
 			audio={currentlyPlaying}
 			barSpacing={16}
-			startHue={0}
-			endHue={50}
+			startHue={120}
+			endHue={120}
 			center
 			{analysisType}
 		/>
