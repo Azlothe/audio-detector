@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package inference;
+
+message AudioRequest {
+    bytes audio_data = 1;
+}
+
+message DeepfakeResponse {
+    bool is_deepfake = 1;  // Prediction result: true = deepfake, false = real
+}
+
+service Inference {
+    rpc ClassifyStream(stream AudioRequest) returns (stream DeepfakeResponse);
+}
