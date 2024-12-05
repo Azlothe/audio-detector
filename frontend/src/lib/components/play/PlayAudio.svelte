@@ -6,18 +6,61 @@
 	import CircleBarAudioVisualizer from '$lib/visualizations/audio/CircleBarAudioVisualizer.svelte';
 	import BarAudioVisualizer from '$lib/visualizations/audio/BarAudioVisualizer.svelte';
 	import { onMount } from 'svelte';
+	import { connect, UPDATE_INTERVAL } from '../../../services/AudioStreamer';
+	import { extractBytes } from '../../../utils/extractAudio';
 
 	export let file: File;
 	export let player = new AudioFilePlayer();
 	export let currentlyPlaying: WavRecorder | AudioFilePlayer | null = null;
 
+	let startHue = 0;
+	let endHue = 50;
+
 	let paused = false;
 	const analysisType: 'music' | 'voice' | 'frequency' = 'voice';
+
+	let socket: WebSocket | null = null;
+	let deepfakeStatus: boolean | null = null;
 
 	onMount(async () => {
 		await player.loadFile(file);
 		startAudio();
+
+		socket = await connect((data) => {
+			try {
+				const payload = JSON.parse(data);
+				deepfakeStatus = payload['deepfake'];
+			} catch (error) {
+				deepfakeStatus = null;
+				console.error(error);
+			}
+		});
+
+		setTimeout(() => {
+			setInterval(() => {
+				extractBytes(file, 3)
+				.then((bytes) => {
+					console.log(bytes);
+					if (bytes) socket?.send(bytes);
+				})
+			}, UPDATE_INTERVAL);
+		}, UPDATE_INTERVAL);
 	});
+
+	$: switch (deepfakeStatus) {
+		case true:
+			startHue = 0;
+			endHue = 0;
+			break;
+		case false:
+			startHue = 120;
+			endHue = 120;
+			break;
+		case null:
+			startHue = 0;
+			endHue = 50;
+			break;
+	}
 
 	async function startAudio() {
 		if (!paused) {
@@ -25,6 +68,8 @@
 			paused = true;
 			return;
 		}
+		
+		console.log(player);
 
 		player.play();
 		currentlyPlaying = player;
@@ -37,7 +82,7 @@
 	<AudioFrequency audio={currentlyPlaying} let:getValues {analysisType}>
 		<div class="h-full w-full overflow-hidden rounded-xl border border-white/15 p-2">
 			<Glow glow={10}>
-				<InnerGlowVisualizer values={getValues(256)} startHue={0} endHue={120} />
+				<InnerGlowVisualizer values={getValues(64)} {startHue} {endHue} />
 			</Glow>
 		</div>
 	</AudioFrequency>
@@ -48,8 +93,8 @@
 		<BarAudioVisualizer
 			audio={currentlyPlaying}
 			barSpacing={16}
-			startHue={120}
-			endHue={120}
+			{startHue}
+			{endHue}
 			center
 			{analysisType}
 		/>
@@ -60,8 +105,8 @@
 	>
 		<CircleBarAudioVisualizer
 			audio={currentlyPlaying}
-			startHue={120}
-			endHue={120}
+			{startHue}
+			{endHue}
 			rotate={2}
 			{analysisType}
 		/>
