@@ -10,7 +10,7 @@ class InferenceService(inference_pb2_grpc.InferenceServicer):
     async def ClassifyStream(self, request_iterator, context):
         async for request in request_iterator:
             audio_data = request.audio_data
-            logger.info(f"Received audio data: {audio_data}")
+            # logger.info(f"Received audio data: {audio_data}")
 
             is_deepfake = await classify_stream(audio_data)
             yield inference_pb2.DeepfakeResponse(is_deepfake=is_deepfake)
