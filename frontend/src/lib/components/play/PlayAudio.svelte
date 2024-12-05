@@ -38,7 +38,7 @@
 
 		setTimeout(() => {
 			setInterval(() => {
-				extractBytes(file, 3)
+				extractBytes(player.buffer!, player.context?.currentTime!, 3)
 				.then((bytes) => {
 					console.log(bytes);
 					if (bytes) socket?.send(bytes);
