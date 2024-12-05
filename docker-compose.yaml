@@ -1,0 +1,17 @@
+services:
+  backend:
+    build: ./backend/
+    environment:
+      - INFERENCE_NAME=${INFERENCE_NAME:?Please set INFERENCE_NAME in your environment}
+      - INFERENCE_PORT=${INFERENCE_PORT:?Please set INFERENCE_PORT in your environment}
+    restart: unless-stopped
+    ports:
+      - ${BACKEND_PORT:?Please set BACKEND_PORT in your environment}:8000
+    container_name: ${BACKEND_NAME:?Please set BACKEND_NAME in your environment}
+
+  inference:
+    build: ./inference/
+    restart: unless-stopped
+    ports:
+      - ${INFERENCE_PORT:?Please set INFERENCE_PORT in your environment}:50050
+    container_name: ${INFERENCE_NAME:?Please set INFERENCE_NAME in your environment}
