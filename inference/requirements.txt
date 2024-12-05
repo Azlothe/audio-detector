@@ -1,3 +1,8 @@
 grpcio==1.68.1
 grpcio-tools==1.68.1
+joblib==1.4.2
+librosa==0.10.2.post1
+pandas==2.2.3
 protobuf==5.29.0
+pydub==0.25.1
+scikit-learn==1.5.2
